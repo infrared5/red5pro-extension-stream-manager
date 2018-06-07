@@ -1,0 +1,28 @@
+{
+  "name": "red5pro-extension-stream-manager",
+  "version": "1.0.0",
+  "description": "Library extension for Stream Manager support",
+  "main": "index.js",
+  "scripts": {
+    "webpack:build": "webpack",
+    "webpack:build-min": "NODE_ENV=staging webpack",
+    "webpack:dist": "NODE_ENV=production webpack",
+    "lint": "eslint ./src --ext .js",
+    "test": "test"
+  },
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "babel-core": "^6.26.3",
+    "babel-eslint": "^8.2.3",
+    "babel-loader": "^7.1.4",
+    "babel-plugin-transform-object-assign": "^6.22.0",
+    "babel-plugin-transform-runtime": "^6.23.0",
+    "babel-preset-env": "^1.7.0",
+    "babel-preset-es2015": "^6.24.1",
+    "eslint": "^4.19.1",
+    "webpack": "^4.11.1",
+    "webpack-cli": "^3.0.3"
+  },
+  "dependencies": {}
+}
