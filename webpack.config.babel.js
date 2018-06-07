@@ -9,8 +9,8 @@ const banner = `
   Url: ${pkg.homepage}
 `;
 
-const buildDir = path.join(process.cwd(), 'build', `red5pro-extension-stream-manager-${pkg.version}`, 'lib', 'red5pro')
-const distDir = path.join(process.cwd(), 'dist', `red5pro-extension-stream-manager-${pkg.version}`, 'lib', 'red5pro')
+const buildDir = path.join(process.cwd(), 'build', `red5pro-ext-stream-manager-${pkg.version}`, 'lib', 'red5pro')
+const distDir = path.join(process.cwd(), 'dist', `red5pro-ext-stream-manager-${pkg.version}`, 'lib', 'red5pro')
 const PROD = (process.env.NODE_ENV === 'production')
 const STAGING = (process.env.NODE_ENV === 'staging')
 
