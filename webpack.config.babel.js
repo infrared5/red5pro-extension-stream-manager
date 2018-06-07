@@ -36,7 +36,7 @@ export default {
     library: 'red5prosdk_ext_stream_manager',
     libraryTarget: 'umd',
     path: PROD ? distDir : buildDir,
-    filename: (PROD || STAGING) ? 'red5pro-extension-stream-manager.min.js' : 'red5pro-extension-stream-manager.js'
+    filename: (PROD || STAGING) ? 'red5pro-ext-stream-manager.min.js' : 'red5pro-ext-stream-manager.js'
   },
   devtool: (PROD || STAGING) ? '' : '#inline-source-map',
   module: {
