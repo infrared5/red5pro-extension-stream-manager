@@ -32,13 +32,14 @@ const modifyInitConfigWithResponse = (config, response, autoscaleConfig) => {
   return c
 }
 
-const execute = async (config, count, limit) => {
+const execute = async (config, count, limit, delay) => {
   const onfailure = () => {
-    if (++count < limit) {
+    if (count++ < limit) {
+      debug(NAME, `Attempt ${count} of ${limit}, with ${delay} millisecond delay.`)
       let timeout = setTimeout(() => {
         clearTimeout(timeout)
-        execute(config, count, limit)
-      }, 1000)
+        execute(config, count, limit, delay)
+      }, delay)
       return true
     }
     return false
@@ -48,17 +49,19 @@ const execute = async (config, count, limit) => {
     let response = await request(config)
     return response
   } catch (e) {
-    if (!onfailure()) throw e
+    if (!onfailure()) {
+      throw e
+    }
   }
 }
 
 export const autoscaleInit = async (proxy, autoscaleConfig, initConfig) => {
   let retryCount = 0
-  const { retryLimit } = autoscaleConfig
+  const { retryLimit, retryDelay } = autoscaleConfig
   let response
 
   try {
-    response = await execute(autoscaleConfig, retryCount, retryLimit)
+    response = await execute(autoscaleConfig, retryCount, retryLimit, retryDelay)
     const keys = Object.keys(initConfig)
     if (isFailoverConfig.test(keys.toString())) {
       let key

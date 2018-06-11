@@ -11,6 +11,7 @@ const defaultConfig = {
   region: undefined,      // optional
   accessToken: undefined, // optional
   retryLimit: 0,          // optional, default (no retry)
+  retryDelay: 1000,        // optional, default=1000
   useProxy: true          // optional, default=true. Enforces connection proxy for WebRTC clients
 }
 
