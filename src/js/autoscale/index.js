@@ -10,7 +10,7 @@ const isRTC = /(wss|ws)/
 const modifyInitConfigWithResponse = (config, response, autoscaleConfig) => {
   let c
   if (autoscaleConfig.useProxy && isRTC.test(config.protocol)) {
-    const connParams = {
+    const connectionParams = {...config.connectionParams,
       host: response.serverAddress,
       app: response.scope.substr(1, response.scope.length-1)
     }
@@ -20,12 +20,12 @@ const modifyInitConfigWithResponse = (config, response, autoscaleConfig) => {
       streamName: response.name,
       host: autoscaleConfig.host,
       app: 'streammanager',
-      connectionParams: config.connectionParams ? {...config.connectionParams, connParams} : connParams
+      connectionParams: connectionParams
     }
   } else {
     c = {...config,
       host: response.serverAddress,
-      app: response.scope,
+      app: response.scope.substr(1, response.scope.length-1),
       streamName: response.name
     }
   }
