@@ -22,16 +22,21 @@ let plugins = [
   })
 ]
 
+/*
 if(PROD || STAGING) {
   plugins.push(new webpack.optimize.UglifyJsPlugin({
       minimize: true,
       debug: false
   }))
 }
+*/
 
 export default {
   mode: process.env.NODE_ENV || 'development',
   entry: [path.join(process.cwd(), 'src', 'js', 'index.js')],
+  optimization: {
+    minimize: PROD || STAGING
+  },
   output: {
     library: 'red5prosdk_ext_stream_manager',
     libraryTarget: 'umd',
@@ -44,9 +49,9 @@ export default {
       {
         test: /\.js$/,
         exclude: /node_modules/,
-        use: {
-          loader: 'babel-loader'
-        }
+        use: [
+          {loader: 'babel-loader'}
+        ]
       }
     ]
   },

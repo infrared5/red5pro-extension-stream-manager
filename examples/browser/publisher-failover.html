@@ -1,0 +1,65 @@
+<!doctype html>
+<html>
+  <head>
+    <script src="https://webrtc.github.io/adapter/adapter-latest.js"></script>
+  </head>
+  <body>
+          <div>
+              <video id="red5pro-publisher" muted autoplay playsinline></video>
+          </div>
+          <script src="lib/red5pro/red5pro-sdk.js"></script>
+          <script src="lib/red5pro/red5pro-ext-stream-manager.js"></script>
+          <script>
+            (function (red5prosdk, sm_ext) {
+              red5prosdk.setLogLevel('debug');
+              sm_ext.setLogLevel('debug');
+              sm_ext.decorate();
+
+              var autoscaleConfig = {
+                protocol: 'https',
+                host: 'nafarat.red5.org',
+                streamName: 'stream1todd',
+                scope: 'live',
+                apiVersion: '2.0',
+                action: 'broadcast',
+                useProxy: true
+              };
+              var config = {
+                rtc: {
+                  protocol: 'wss',
+                  host: 'nafarat.red5.org',
+                  port: 8083,
+                  app: "live",
+                  bandwidth: {
+                    'audio': 50,
+                    'video': 256
+                  },
+                  streamName: 'stream1todd',
+                  iceServers: [{urls: 'stun:stun2.l.google.com:19302'}]
+                },
+                rtmp: {
+                  protocol: 'rtmp',
+                  host: 'nafarat.red5.org',
+                  port: 1935,
+                  app: 'live',
+                  embedWidth: '100%',
+                  embedHeight: 360,
+                  streamName: 'stream1todd',
+                  swf: './lib/red5pro/red5pro-publisher.swf',
+                  swfobjectURL: './lib/swfobject/swfobject.js',
+                  productInstallURL: './lib/swfobject/playerProductInstall.swf'
+                }
+              };
+              var pub = new red5prosdk.Red5ProPublisher()
+                .setPublishOrder(['rtc', 'rtmp'])
+                .autoscale(autoscaleConfig, config)
+                .then(function (publisher) {
+                  return publisher.publish()
+                })
+                .catch(function (error) {
+                  console.error(error)
+                });
+            })(window.red5prosdk, window.red5prosdk_ext_stream_manager);
+          </script>
+  </body>
+</html>

@@ -4,13 +4,13 @@
  * @file red5pro-ext-stream-manager.min.js
  * @module red5prosdk_ext_stream_manager
  *
- *
  */
 
 // SDK_VERSION, LOG_LEVEL injected from webpack build.
 import { LEVELS, establishLogger } from './log'
 import { getLogger as _getLogger } from './log'
 import environment from './env/browser'
+import { Decorate } from './autoscale'
 
 establishLogger(`${LOG_LEVEL}` || LEVELS.DEBUG) // eslint-disable-line no-undef
 
@@ -50,7 +50,22 @@ export const getLogger = _getLogger
 export const decorate = () => {
   const red5prosdk = environment.getRed5ProSDK()
   if (red5prosdk) {
-    getLogger().debug('Will Decorate')
+    const {
+      Red5ProSubscriber,
+      RTCSubscriber,
+      HLSSubscriber,
+      RTMPSubscriber,
+      Red5ProPublisher,
+      RTCPublisher,
+      RTMPPublisher
+    } = red5prosdk
+    Decorate(Red5ProSubscriber)
+    Decorate(RTCSubscriber)
+    Decorate(HLSSubscriber)
+    Decorate(RTMPSubscriber)
+    Decorate(Red5ProPublisher)
+    Decorate(RTCPublisher)
+    Decorate(RTMPPublisher)
   } else {
     getLogger().warn('Could not decorate the red5prosdk global. It does not exist.')
   }
