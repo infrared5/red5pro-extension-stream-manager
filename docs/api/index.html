@@ -35,7 +35,7 @@
         <ul></ul>
     </div>
     
-    <div class="lnb-api hidden"><h3>Modules</h3><ul><li><a href="module-red5prosdk_ext_stream_manager.html">red5prosdk_ext_stream_manager</a><button type="button" class="hidden toggle-subnav btn btn-link">  <span class="glyphicon glyphicon-plus"></span></button><div class="hidden" id="module:red5prosdk_ext_stream_manager_sub"><div class="member-type">Members</div><ul class="inner"><li><a href="module-red5prosdk_ext_stream_manager.html#.getLogger">getLogger</a></li><li><a href="module-red5prosdk_ext_stream_manager.html#.LOG_LEVELS">LOG_LEVELS</a></li><li><a href="module-red5prosdk_ext_stream_manager.html#.setLogLevel">setLogLevel</a></li></ul></div></li></ul></div>
+    <div class="lnb-api hidden"><h3>Modules</h3><ul><li><a href="module-red5prosdk_ext_stream_manager.html">red5prosdk_ext_stream_manager</a><button type="button" class="hidden toggle-subnav btn btn-link">  <span class="glyphicon glyphicon-plus"></span></button><div class="hidden" id="module:red5prosdk_ext_stream_manager_sub"><div class="member-type">Members</div><ul class="inner"><li><a href="module-red5prosdk_ext_stream_manager.html#.decorate">decorate</a></li><li><a href="module-red5prosdk_ext_stream_manager.html#.getLogger">getLogger</a></li><li><a href="module-red5prosdk_ext_stream_manager.html#.LOG_LEVELS">LOG_LEVELS</a></li><li><a href="module-red5prosdk_ext_stream_manager.html#.setLogLevel">setLogLevel</a></li></ul></div></li></ul></div><div class="lnb-api hidden"><h3>Global</h3><ul><li><a href="global.html#Autoscale">Autoscale</a></li><li><a href="global.html#autoscaleInit">autoscaleInit</a></li><li><a href="global.html#Decorate">Decorate</a></li><li><a href="global.html#request">request</a></li></ul></div>
 </nav>
 <div id="resizer"></div>
 
@@ -71,11 +71,11 @@
     &lt;!-- video containers -->
     &lt;!-- publisher -->
     &lt;div>
-      &lt;video id=&quot;red5pro-publisher&quot; width=&quot;640&quot; height=&quot;480&quot; muted autoplay>&lt;/video>
+      &lt;video id=&quot;red5pro-publisher&quot; width=&quot;640&quot; height=&quot;480&quot; muted autoplay playsinline>&lt;/video>
     &lt;/div>
     &lt;!-- subscriber -->
     &lt;div>
-      &lt;video id=&quot;red5pro-subscriber&quot; width=&quot;640&quot; height=&quot;480&quot; controls autoplay>&lt;/video>
+      &lt;video id=&quot;red5pro-subscriber&quot; width=&quot;640&quot; height=&quot;480&quot; controls autoplay playsinline>&lt;/video>
     &lt;/div>
     &lt;!-- Red5 Pro SDK -->
     &lt;script src=&quot;lib/red5pro/red5pro-sdk.min.js&quot;>&lt;/script>
@@ -105,7 +105,7 @@
         var initConfig = {
           protocol: 'wss',
           host: 'streammanager.company.org',
-          port: 8081,
+          port: 8083:,
           app: 'live',
           streamName: 'mystream',
           iceServers: [{urls: 'stun:stun2.l.google.com:19302'}]
@@ -119,7 +119,8 @@
         });
 
         function subscribe () {
-          rtcSubscriber.autoscale(subscribeAutoscaleConfig, initConfig)
+          rtcSubscriber
+            .autoscale(subscribeAutoscaleConfig, initConfig)
             .then(function () {
               return rtcSubscriber.subscribe();
             })
@@ -129,7 +130,8 @@
         }
 
         // First connect Autoscale-d Publisher.
-        rtcPublisher.autoscale(publishAutoscaleConfig, initConfig)
+        rtcPublisher
+          .autoscale(publishAutoscaleConfig, initConfig)
           .then(function () {
             // Once publishing, we will start the Autoscale-d Subscriber.
             rtcPublisher.on(red5prosdk.PublisherEventTypes.PUBLISH_START, subscribe);
