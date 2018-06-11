@@ -2,17 +2,22 @@
   "name": "red5pro-extension-stream-manager",
   "version": "1.0.0",
   "description": "Library extension for Stream Manager support",
-  "main": "index.js",
-  "scripts": {
-    "webpack:build": "webpack",
-    "webpack:build-min": "NODE_ENV=staging webpack",
-    "webpack:dist": "NODE_ENV=production webpack",
-    "postwebpack:build": "gulp move-build-to-examples",
-    "lint": "eslint ./src --ext .js",
-    "test": "test"
+  "main": "src/index.js",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/red5pro/red5pro-extension-stream-manager.git"
   },
-  "author": "",
-  "license": "ISC",
+  "keywords": [
+    "Red5",
+    "Red5Pro",
+    "Publisher",
+    "Subscriber",
+    "Video",
+    "Streaming",
+    "StreamManager"
+  ],
+  "author": "Infrared5 Inc.",
+  "license": "MIT",
   "devDependencies": {
     "babel-core": "^6.26.3",
     "babel-eslint": "^8.2.3",
@@ -25,14 +30,25 @@
     "babel-preset-env": "^1.7.0",
     "babel-preset-es2015": "^6.24.1",
     "babel-preset-es2017": "^6.24.1",
+    "cheerio": "^1.0.0-rc.2",
     "colors": "^1.3.0",
     "eslint": "^4.19.1",
     "gulp": "^3.9.1",
+    "jsdoc": "^3.5.5",
     "webpack": "^4.11.1",
     "webpack-cli": "^3.0.3"
   },
   "dependencies": {
     "browser-bunyan": "^1.3.0",
     "whatwg-fetch": "^2.0.4"
+  },
+  "scripts": {
+    "webpack:build": "webpack",
+    "webpack:build-min": "NODE_ENV=staging webpack",
+    "webpack:dist": "NODE_ENV=production webpack",
+    "postwebpack:build": "gulp move-build-to-examples",
+    "lint": "eslint ./src --ext .js",
+    "test": "test",
+    "docs:api": "jsdoc -r src/js -d docs/api -c .jsdoc"
   }
 }
