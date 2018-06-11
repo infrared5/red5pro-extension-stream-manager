@@ -13,7 +13,6 @@
             (function (red5prosdk, sm_ext) {
               red5prosdk.setLogLevel('debug');
               sm_ext.setLogLevel('debug');
-              sm_ext.decorate();
 
               var autoscaleConfig = {
                 protocol: 'https',
@@ -50,9 +49,25 @@
                   productInstallURL: './lib/swfobject/playerProductInstall.swf'
                 }
               };
-              var pub = new red5prosdk.Red5ProPublisher()
+              // ---- OPTION 1 ---- //
+              /*
+              sm_ext.decorate();
+              new red5prosdk.Red5ProPublisher()
                 .setPublishOrder(['rtc', 'rtmp'])
                 .autoscale(autoscaleConfig, config)
+                .then(function (publisher) {
+                  return publisher.publish()
+                })
+                .catch(function (error) {
+                  console.error(error)
+                });
+              */
+
+              // ---- OPTION 2 ---- //
+              var failover = new red5prosdk.Red5ProPublisher()
+                                  .setPublishOrder(['rtc', 'rtmp'])
+              sm_ext.Autoscale(failover)
+                .init(autoscaleConfig, config)
                 .then(function (publisher) {
                   return publisher.publish()
                 })

@@ -10,7 +10,7 @@
 import { LEVELS, establishLogger } from './log'
 import { getLogger as _getLogger } from './log'
 import environment from './env/browser'
-import { Decorate } from './autoscale'
+import { Autoscale, Decorate } from './autoscale'
 
 establishLogger(`${LOG_LEVEL}` || LEVELS.DEBUG) // eslint-disable-line no-undef
 
@@ -70,3 +70,5 @@ export const decorate = () => {
     getLogger().warn('Could not decorate the red5prosdk global. It does not exist.')
   }
 }
+
+export { Autoscale }
