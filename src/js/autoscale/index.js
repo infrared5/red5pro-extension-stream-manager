@@ -1,70 +1,12 @@
 import req from './request.js'
 import { debug } from '../log'
+import {
+  timeout,
+  asyncWrap,
+  modifyInitConfigWithStreamManagerResponse
+} from './util'
 
 const NAME = 'Red5ProStreamManagerExt'
-const isFailoverConfig = /(rtc|rtmp|hls)/
-const isRTC = /(wss|ws)/
-// const isRTMP = /(rtmps|rtmp)/
-// const isHLS = /(https|http)/
-
-const timeout = (delay) => {
-  return new Promise(resolve => setTimeout(resolve, delay))
-}
-
-/**
- * Modifies the intialization configuration used for publisher or subscriber.
- * This configuration can vary based on target tech and the `useProxy` attribute of the autoscale configuration.
- *
- * @private
- */
-const modifyInitConfigWithResponse = (config, response, autoscaleConfig) => {
-  let c
-  // WebRTC most likely will require `useProxy`.
-  // This is due to Origin and Edge IPs being returned from the Stream Manager API.
-  // Only Fully Qualified Domain Names can have an associated cert and WebRTC requires SSL.
-  if (autoscaleConfig.useProxy && isRTC.test(config.protocol)) {
-    // The structure of a "proxied" configuration is to pass `connectionParams`
-    //  describing the endpoint (Origin/Edge) and requesting through the Stream Manager webapp.
-    const connectionParams = {...config.connectionParams,
-      host: response.serverAddress,
-      app: response.scope.substr(1, response.scope.length-1)
-    }
-    c = {...config,
-      protocol: config.protocol,
-      port: config.port,
-      streamName: response.name,
-      host: autoscaleConfig.host,
-      app: 'streammanager',
-      connectionParams: connectionParams
-    }
-  } else {
-    // If we don't need to proxy, then just inject the Stream Manager response attributes.
-    c = {...config,
-      host: response.serverAddress,
-      app: response.scope.substr(1, response.scope.length-1),
-      streamName: response.name
-    }
-  }
-  return c
-}
-
-/**
- * Nicely wraps an async in a promise so we can use in-line without try...catch.
- *
- * @private
- */
-const asyncWrap = (p) => {
-  return new Promise(resolve => {
-    p.then(response => {
-      resolve(response)
-    }).catch(e => {
-      resolve({
-        error: e.message,
-        message: e.response.errorMessage
-      })
-    })
-  })
-}
 
 /**
  * Allows for retry in requesting on the Stream Manager API.
@@ -107,17 +49,9 @@ const autoscaleInit = async (proxy, autoscaleConfig, initConfig) => {
 
   try {
     response = await execute(autoscaleConfig, retryCount, retryLimit, retryDelay)
-    const keys = Object.keys(initConfig)
-    if (isFailoverConfig.test(keys.toString())) {
-      let key
-      for (key in initConfig) {
-        initConfig[key] = modifyInitConfigWithResponse(initConfig[key], response, autoscaleConfig)
-      }
-    } else {
-      initConfig = modifyInitConfigWithResponse(initConfig, response, autoscaleConfig)
-    }
-    debug(NAME, `[init-config]:: ${JSON.stringify(initConfig, null, 2)}`)
-    return proxy.init(initConfig)
+    const config = modifyInitConfigWithStreamManagerResponse(initConfig, response, autoscaleConfig)
+    debug(NAME, `[init-config]:: ${JSON.stringify(config, null, 2)}`)
+    return proxy.init(config)
   } catch (e) {
     throw e
   }
