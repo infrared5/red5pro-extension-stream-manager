@@ -62,23 +62,31 @@ const endpointFromConfiguration = (configuration) => {
  *    useProxy: true          // optional, default=true. Enforces connection proxy for WebRTC clients
  *  }
  */
-const request = async (config) => {
+const req = async (config) => {
   const configuration = Object.assign({}, defaultConfig, config)
   const url = endpointFromConfiguration(configuration)
 
-  let response = await environment.fetch(url)
-  if ((response.status >= 200 && response.status < 300) &&
-    (response.headers.get('content-type') &&
-    response.headers.get('content-type').toLowerCase().indexOf('application/json') >= 0)) {
+  try {
+    let response = await environment.fetch(url)
+    if ((response.status >= 200 && response.status < 300) &&
+      (response.headers.get('content-type') &&
+      response.headers.get('content-type').toLowerCase().indexOf('application/json') >= 0)) {
 
-    let payload = await response.json()
-    return payload
+      let payload = await response.json()
+      return payload
 
-  } else {
-    let error = new Error(`Could not properly parse response from ${url}.`)
-    error.response = response
-    throw error
+    } else {
+      let error = new Error(`Could not properly parse response from ${url}.`)
+      try {
+        error.response = await response.json()
+      } catch (e) {
+        error.response = response
+      }
+      throw error
+    }
+  } catch (e) {
+    throw e
   }
 }
 
-export default request
+export default req

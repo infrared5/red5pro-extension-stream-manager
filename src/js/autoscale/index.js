@@ -1,4 +1,4 @@
-import request from './request.js'
+import req from './request.js'
 import { debug } from '../log'
 
 const NAME = 'Red5ProStreamManagerExt'
@@ -6,6 +6,10 @@ const isFailoverConfig = /(rtc|rtmp|hls)/
 const isRTC = /(wss|ws)/
 // const isRTMP = /(rtmps|rtmp)/
 // const isHLS = /(https|http)/
+
+const timeout = (delay) => {
+  return new Promise(resolve => setTimeout(resolve, delay))
+}
 
 /**
  * Modifies the intialization configuration used for publisher or subscriber.
@@ -45,31 +49,44 @@ const modifyInitConfigWithResponse = (config, response, autoscaleConfig) => {
 }
 
 /**
+ * Nicely wraps an async in a promise so we can use in-line without try...catch.
+ *
+ * @private
+ */
+const asyncWrap = (p) => {
+  return new Promise(resolve => {
+    p.then(response => {
+      resolve(response)
+    }).catch(e => {
+      resolve({
+        error: e.message,
+        message: e.response.errorMessage
+      })
+    })
+  })
+}
+
+/**
  * Allows for retry in requesting on the Stream Manager API.
  *
  * @private
  */
 const execute = async (config, count, limit, delay) => {
-  const onfailure = () => {
-    if (count++ < limit) {
-      debug(NAME, `Attempt ${count} of ${limit}, with ${delay} millisecond delay.`)
-      let timeout = setTimeout(() => {
-        clearTimeout(timeout)
-        execute(config, count, limit, delay)
-      }, delay)
-      return true
+  debug(NAME, `Attempting ${count+1} of ${limit} with ${delay} millisecond delay...`)
+  let response = await asyncWrap(req(config))
+  while (!response || (response && response.error)) {
+    if (limit === -1 || (++count < limit)) {
+      debug(NAME, `Attempting ${count+1} of ${limit} with ${delay} millisecond delay...`)
+      await timeout(delay)
+      response = await asyncWrap(req(config))
+    } else {
+      break
     }
-    return false
   }
-
-  try {
-    let response = await request(config)
+  if (!response || response.error) {
+    throw new Error(response.message || response.error)
+  } else {
     return response
-  } catch (e) {
-    // If we fail, try again until we are not allowed.
-    if (!onfailure()) {
-      throw e
-    }
   }
 }
 
@@ -111,6 +128,7 @@ const autoscaleInit = async (proxy, autoscaleConfig, initConfig) => {
  *
  * @param {Object} proxy
  *        The established Publisher or Subscriber instance of the Red5 Pro SDK.
+ *  @private
  */
 export const Autoscale = (proxy) => {
   return {
@@ -125,13 +143,15 @@ export const Autoscale = (proxy) => {
  *
  * @param {Class} clazz
  *        The Class reference to apply the `autoscale` function to.
+ * @private
  */
 export const Decorate = (clazz) => {
   let fn = function(autoscaleConfig, initConfig) {
     return autoscaleInit(this, autoscaleConfig, initConfig)
   }
   Object.defineProperty(clazz.prototype, 'autoscale', {
-    value: fn
+    value: fn,
+    enumerable: true
   })
 }
 
