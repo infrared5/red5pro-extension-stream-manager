@@ -32,8 +32,8 @@
 
         var autoscaleConfig = {
           protocol: 'https',
-          host: 'nafarat.red5.org',
-          streamName: 'stream1todd',
+          host: '127.0.0.0',
+          streamName: 'mystream',
           scope: 'live',
           apiVersion: '2.0',
           useProxy: true
@@ -41,10 +41,10 @@
 
         var initConfig = {
           protocol: 'wss',
-          host: 'nafarat.red5.org',
+          host: '127.0.0.0',
           port: 8083,
           app: 'live',
-          streamName: 'stream1todd',
+          streamName: 'mystream',
           iceServers: [{urls: 'stun:stun2.l.google.com:19302'}]
         };
 

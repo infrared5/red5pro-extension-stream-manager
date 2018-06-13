@@ -1,6 +1,7 @@
 /* eslint no-console: 0 */
 var path = require('path');
 var gulp = require('gulp');
+var bump = require('gulp-bump');
 var pkg = path.join(process.cwd(), 'package.json')
 var version = require(pkg).version;
 
@@ -16,4 +17,20 @@ console.log('Current version is ' + version.white + '.');
 gulp.task('move-build-to-examples', [], function(cb) {
   return gulp.src([path.join(buildDir, '**', '*')]).pipe(gulp.dest(path.join(examplesDir, 'lib', 'red5pro')));
 });
+
+gulp.task('bump-version', function() {
+  var versionType = process.env.BUMP !== undefined ? process.env.BUMP : 'patch';
+  var files = [pkg];
+  if (versionType === 'none') {
+    gulp.src(files).pipe(gulp.dest(__dirname));
+  }
+  else {
+    gulp.src(files)
+      .pipe(bump({
+        type: versionType
+      }))
+      .pipe(gulp.dest(__dirname));
+  }
+});
+
 

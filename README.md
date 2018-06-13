@@ -19,6 +19,8 @@
   * [Autoscale](#autoscale)
 * [Autoscale Configuraiton](#autoscale-configuration)
 
+---
+
 # Quickstart
 
 Before creating the following client-side example, you will first need to set up your remote **Red5 Pro Server** to support autoscaling: [Red5 Pro Autoscaling and Stream Manager](https://www.red5pro.com/docs/autoscale/).
@@ -63,19 +65,19 @@ In a browser:
 
         var autoscaleConfig = {
           protocol: 'https',
-          host: 'nafarat.red5.org',
-          streamName: 'stream1todd',
+          host: 'streammanager.company.org',
+          streamName: 'mystream',
           scope: 'live',
-          apiVersion: '2.0',
+          apiVersion: '3.0',
           useProxy: true
         };
 
         var initConfig = {
           protocol: 'wss',
-          host: 'nafarat.red5.org',
+          host: 'streammanager.company.org',
           port: 8083,
           app: 'live',
-          streamName: 'stream1todd',
+          streamName: 'mystream',
           iceServers: [{urls: 'stun:stun2.l.google.com:19302'}]
         };
 
