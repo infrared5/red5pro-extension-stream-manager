@@ -312,7 +312,7 @@ The following describes the available required and optional properties to provid
 
 ```js
 var autoscaleConfiguration = {
-  action: 'broadcast,     // required
+  action: 'broadcast',     // required
   protocol: 'https',      // required, default=https
   host: 'sm.company.org', // required
   port: undefined,        // optional (will assume 443/naked with protocol=https)
