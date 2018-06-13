@@ -1,14 +1,14 @@
 const isFailoverConfig = /(rtc|rtmp|hls)/
 const isRTC = /(wss|ws)/
+const isHLS = /(https|http)/
 // const isRTMP = /(rtmps|rtmp)/
-// const isHLS = /(https|http)/
 
 const assignConnectionParams = (config, response, autoscaleConfig) => {
     let c
-  // WebRTC most likely will require `useProxy`.
+  // WebRTC publishers and subscriber and HLS subscribers most likely will require `useProxy`.
   // This is due to Origin and Edge IPs being returned from the Stream Manager API.
   // Only Fully Qualified Domain Names can have an associated cert and WebRTC requires SSL.
-  if (autoscaleConfig.useProxy && isRTC.test(config.protocol)) {
+  if (autoscaleConfig.useProxy && (isRTC.test(config.protocol) || isHLS.test(config.protocol))) {
     // The structure of a "proxied" configuration is to pass `connectionParams`
     //  describing the endpoint (Origin/Edge) and requesting through the Stream Manager webapp.
     const connectionParams = {...config.connectionParams,
