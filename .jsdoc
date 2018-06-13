@@ -1,0 +1,20 @@
+{
+  "plugins": ["plugins/markdown"],
+  "markdown": {
+    "tags": ["example"]
+  },
+  "opts": {
+    "destination": "docs/api",
+    "readme": "docs/index.md",
+    "template": "docs/jsdoc-template",
+    "package": "package.json",
+    "recurse": true,
+    "encoding": "utf8"
+  },
+  "templates": {
+    "default": {
+      "outputSourceFiles": false
+    },
+    "footerText": ""
+   }
+ }

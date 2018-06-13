@@ -1,0 +1,568 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>Module: red5prosdk_ext_stream_manager | red5pro-extension-stream-manager</title>
+
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/bootstrap.min.css">
+    <link type="text/css" rel="stylesheet" href="styles/prettify-jsdoc.css">
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/tui-doc.css">
+    <link type="text/css" rel="stylesheet" href="styles/red5pro-doc.css">
+
+    
+</head>
+<body>
+<nav class="lnb" id="lnb">
+    <div class="logo" style="">
+        
+            <img src="img/red5pro_logo.png" width="100%" height="100%">
+        
+    </div>
+    <div class="title">
+        <h1><a href="index.html" class="link">red5pro-extension-stream-manager</a></h1>
+        
+            <span class="version">v1.0.0</span>
+        
+    </div>
+    <div class="search-container" id="search-container">
+        <input type="text" placeholder="Search">
+        <ul></ul>
+    </div>
+    
+    <div class="lnb-api hidden"><h3>Modules</h3><ul><li><a href="module-red5prosdk_ext_stream_manager.html">red5prosdk_ext_stream_manager</a><button type="button" class="hidden toggle-subnav btn btn-link">  <span class="glyphicon glyphicon-plus"></span></button><div class="hidden" id="module:red5prosdk_ext_stream_manager_sub"><div class="member-type">Members</div><ul class="inner"><li><a href="module-red5prosdk_ext_stream_manager.html#.decorate">decorate</a></li><li><a href="module-red5prosdk_ext_stream_manager.html#.getLogger">getLogger</a></li><li><a href="module-red5prosdk_ext_stream_manager.html#.LOG_LEVELS">LOG_LEVELS</a></li><li><a href="module-red5prosdk_ext_stream_manager.html#.setLogLevel">setLogLevel</a></li></ul></div></li></ul></div><div class="lnb-api hidden"><h3>Global</h3><ul><li><a href="global.html#asyncWrap">asyncWrap</a></li><li><a href="global.html#autoscaleInit">autoscaleInit</a></li><li><a href="global.html#modifyInitConfigWithStreamManagerResponse">modifyInitConfigWithStreamManagerResponse</a></li><li><a href="global.html#req">req</a></li><li><a href="global.html#timeout">timeout</a></li></ul></div>
+</nav>
+<div id="resizer"></div>
+
+<div class="main" id="main">
+    
+
+
+
+
+<section>
+
+<header>
+    
+        <h2>red5prosdk_ext_stream_manager</h2>
+        
+            
+        
+    
+</header>
+
+<article>
+    
+        <div class="container-overview">
+        
+            
+                <div class="description"><p>red5pro-ext-stream-manager.min.js</p></div>
+            
+
+            
+                
+
+<dt>
+    
+</dt>
+<dd>
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+    
+        <h5>Example</h5>
+        
+    <pre class="prettyprint"><code>&lt;!doctype html>
+&lt;html>
+  &lt;head>
+    &lt;!-- *Recommended WebRTC Shim -->
+    &lt;script src="http://webrtc.github.io/adapter/adapter-latest.js">&lt;/script>
+  &lt;/head>
+  &lt;body>
+    &lt;!-- video containers -->
+    &lt;!-- publisher -->
+    &lt;div>
+      &lt;video id="red5pro-publisher" width="640" height="480" muted autoplay playsinline>&lt;/video>
+    &lt;/div>
+    &lt;!-- subscriber -->
+    &lt;div>
+      &lt;video id="red5pro-subscriber" width="640" height="480" controls autoplay playsinline>&lt;/video>
+    &lt;/div>
+    &lt;!-- Red5 Pro SDK -->
+    &lt;script src="lib/red5pro/red5pro-sdk.min.js">&lt;/script>
+    &lt;script src="lib/red5pro/red5pro-ext-stream-manager.js">&lt;/script>
+    &lt;!-- Create Pub/Sub with Stream Manager support-->
+    &lt;script>
+      (function(red5prosdk, sm_ext) {
+        'use strict';
+        red5prosdk.setLogLevel('debug');
+        sm_ext.setLogLevel('debug');
+
+        // Extend the Red5Pro sdk.
+        sm_ext.decorate();
+
+        var rtcPublisher = new red5prosdk.RTCPublisher();
+        var rtcSubscriber = new red5prosdk.RTCSubscriber();
+
+        var autoscaleConfig = {
+          protocol: 'https',
+          host: 'streammanager.company.org',
+          streamName: 'mystream',
+          scope: 'live',
+          apiVersion: '3.0',
+          useProxy: true
+        };
+
+        var initConfig = {
+          protocol: 'wss',
+          host: 'streammanager.company.org',
+          port: 8083:,
+          app: 'live',
+          streamName: 'mystream',
+          iceServers: [{urls: 'stun:stun2.l.google.com:19302'}]
+        };
+
+        var publishAutoscaleConfig = Object.assign({}, autoscaleConfig, {
+          action: 'broadcast'
+        });
+        var subscribeAutoscaleConfig = Object.assign({}, autoscaleConfig, {
+          action: 'subscribe'
+        });
+
+        function subscribe () {
+          rtcSubscriber
+            .autoscale(subscribeAutoscaleConfig, initConfig)
+            .then(function () {
+              return rtcSubscriber.subscribe();
+            })
+            .catch(function (error) {
+              console.error('Could not play: ' + error);
+            });
+        }
+
+        // First connect Autoscale-d Publisher.
+        rtcPublisher
+          .autoscale(publishAutoscaleConfig, initConfig)
+          .then(function () {
+            // Once publishing, we will start the Autoscale-d Subscriber.
+            rtcPublisher.on(red5prosdk.PublisherEventTypes.PUBLISH_START, subscribe);
+            return rtcPublisher.publish();
+          })
+          .catch(function (error) {
+            console.error('Could not publish: ' + error)
+          });
+
+      }(window.red5prosdk, window.red5prosdk_ext_stream_manager));
+    &lt;/script>
+  &lt;/body>
+&lt;/html></code></pre>
+
+    
+
+</dd>
+
+            
+        
+        </div>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+        <h3 class="subsection-title">Members</h3>
+
+        <dl>
+            
+
+<dt>
+<h4 class="name" id=".decorate">
+    <span class="type-signature"><span class="icon green">static</span>, <span class="icon green">constant</span> </span>decorate<span class="type-signature"></span>
+    
+</h4>
+
+
+</dt>
+<dd>
+    
+    <div class="description">
+        <p>Decorates the publisher and subscriber classes exposed on the Red5 Pro HTML SDK.
+This allows for ease in calling autoscale with a familiar init and Promise-like flow.</p>
+    </div>
+    
+
+    <!--
+    
+    -->
+
+    
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+    
+
+    
+    <h5>Example</h5>
+    
+    <pre class="prettyprint"><code>red5prosdk_ext_stream_manager.decorate()
+new red5prosdk.Red5ProPublisher()
+  .setPublishOrder(['rtc', 'rtmp'])
+  .autoscale(autoscaleConfig, config)
+  .then(function (publisher) {
+    return publisher.publish()
+  })
+  .catch(function (error) {
+    // handle error.
+  });</code></pre>
+
+    
+</dd>
+
+        
+            
+
+<dt>
+<h4 class="name" id=".getLogger">
+    <span class="type-signature"><span class="icon green">static</span>, <span class="icon green">constant</span> </span>getLogger<span class="type-signature"></span>
+    
+</h4>
+
+
+</dt>
+<dd>
+    
+    <div class="description">
+        <p>Retrieves the Logger instance used by the SDK.</p>
+    </div>
+    
+
+    <!--
+    
+    -->
+
+    
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+    
+
+    
+</dd>
+
+        
+            
+
+<dt>
+<h4 class="name" id=".LOG_LEVELS">
+    <span class="type-signature"><span class="icon green">static</span>, <span class="icon green">constant</span> </span>LOG_LEVELS<span class="type-signature"></span>
+    
+</h4>
+
+
+</dt>
+<dd>
+    
+    <div class="description">
+        <p>The enumerated log level Strings.</p>
+<ul>
+<li><code>TRACE</code></li>
+<li><code>INFO</code></li>
+<li><code>DEBUG</code></li>
+<li><code>WARN</code></li>
+<li><code>ERROR</code></li>
+<li><code>FATAL</code></li>
+</ul>
+    </div>
+    
+
+    <!--
+    
+    -->
+
+    
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+    
+
+    
+</dd>
+
+        
+            
+
+<dt>
+<h4 class="name" id=".setLogLevel">
+    <span class="type-signature"><span class="icon green">static</span>, <span class="icon green">constant</span> </span>setLogLevel<span class="type-signature"></span>
+    
+</h4>
+
+
+</dt>
+<dd>
+    
+    <div class="description">
+        <p>Sets the log level for logs from the SDK</p>
+    </div>
+    
+
+    <!--
+    
+    -->
+
+    
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-see">See:</dt>
+    <dd class="tag-see">
+        <ul>
+            <li>LOG_LEVELS</li>
+        </ul>
+    </dd>
+    
+
+    
+</dl>
+
+
+    
+
+    
+</dd>
+
+        </dl>
+    
+
+    
+
+    
+
+    
+</article>
+
+</section>
+
+
+
+
+</div>
+
+<footer>
+    <img class="logo" src="img/red5pro_logo.png" style="">
+</footer>
+<script>prettyPrint();</script>
+<script src="scripts/jquery.min.js"></script>
+<script src="scripts/tui-doc.js"></script>
+<script src="scripts/linenumber.js"></script>
+
+    <script>
+        var id = 'module:red5prosdk_ext_stream_manager_sub'.replace(/"/g, '_');
+        var selectedApi = document.getElementById(id); // do not use jquery selector
+        var $selectedApi = $(selectedApi);
+
+        $selectedApi.removeClass('hidden');
+        $selectedApi.parent().find('.glyphicon').removeClass('glyphicon-plus').addClass('glyphicon-minus');
+        showLnbApi();
+    </script>
+
+</body>
+</html>

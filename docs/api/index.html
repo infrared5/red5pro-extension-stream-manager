@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>Home | red5pro-extension-stream-manager</title>
+
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/bootstrap.min.css">
+    <link type="text/css" rel="stylesheet" href="styles/prettify-jsdoc.css">
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/tui-doc.css">
+    <link type="text/css" rel="stylesheet" href="styles/red5pro-doc.css">
+
+    
+</head>
+<body>
+<nav class="lnb" id="lnb">
+    <div class="logo" style="">
+        
+            <img src="img/red5pro_logo.png" width="100%" height="100%">
+        
+    </div>
+    <div class="title">
+        <h1><a href="index.html" class="link">red5pro-extension-stream-manager</a></h1>
+        
+            <span class="version">v1.0.0</span>
+        
+    </div>
+    <div class="search-container" id="search-container">
+        <input type="text" placeholder="Search">
+        <ul></ul>
+    </div>
+    
+    <div class="lnb-api hidden"><h3>Modules</h3><ul><li><a href="module-red5prosdk_ext_stream_manager.html">red5prosdk_ext_stream_manager</a><button type="button" class="hidden toggle-subnav btn btn-link">  <span class="glyphicon glyphicon-plus"></span></button><div class="hidden" id="module:red5prosdk_ext_stream_manager_sub"><div class="member-type">Members</div><ul class="inner"><li><a href="module-red5prosdk_ext_stream_manager.html#.decorate">decorate</a></li><li><a href="module-red5prosdk_ext_stream_manager.html#.getLogger">getLogger</a></li><li><a href="module-red5prosdk_ext_stream_manager.html#.LOG_LEVELS">LOG_LEVELS</a></li><li><a href="module-red5prosdk_ext_stream_manager.html#.setLogLevel">setLogLevel</a></li></ul></div></li></ul></div><div class="lnb-api hidden"><h3>Global</h3><ul><li><a href="global.html#asyncWrap">asyncWrap</a></li><li><a href="global.html#autoscaleInit">autoscaleInit</a></li><li><a href="global.html#modifyInitConfigWithStreamManagerResponse">modifyInitConfigWithStreamManagerResponse</a></li><li><a href="global.html#req">req</a></li><li><a href="global.html#timeout">timeout</a></li></ul></div>
+</nav>
+<div id="resizer"></div>
+
+<div class="main" id="main">
+    
+
+
+
+    
+
+
+
+
+
+
+
+
+
+    
+
+
+    <section>
+        <article class="readme"><h1>Red5 Pro HTML5 SDK</h1><blockquote>
+<p><a href="https://account.red5pro.com/download">Download the latest release</a></p>
+</blockquote>
+<h1>Quickstart</h1><pre class="prettyprint source lang-html"><code>&lt;!doctype html>
+&lt;html>
+  &lt;head>
+    &lt;!-- *Recommended WebRTC Shim -->
+    &lt;script src=&quot;http://webrtc.github.io/adapter/adapter-latest.js&quot;>&lt;/script>
+  &lt;/head>
+  &lt;body>
+    &lt;!-- video containers -->
+    &lt;!-- publisher -->
+    &lt;div>
+      &lt;video id=&quot;red5pro-publisher&quot; width=&quot;640&quot; height=&quot;480&quot; muted autoplay playsinline>&lt;/video>
+    &lt;/div>
+    &lt;!-- subscriber -->
+    &lt;div>
+      &lt;video id=&quot;red5pro-subscriber&quot; width=&quot;640&quot; height=&quot;480&quot; controls autoplay playsinline>&lt;/video>
+    &lt;/div>
+    &lt;!-- Red5 Pro SDK -->
+    &lt;script src=&quot;lib/red5pro/red5pro-sdk.min.js&quot;>&lt;/script>
+    &lt;script src=&quot;lib/red5pro/red5pro-ext-stream-manager.js&quot;>&lt;/script>
+    &lt;!-- Create Pub/Sub with Stream Manager support-->
+    &lt;script>
+      (function(red5prosdk, sm_ext) {
+        'use strict';
+        red5prosdk.setLogLevel('debug');
+        sm_ext.setLogLevel('debug');
+
+        // Extend the Red5Pro sdk.
+        sm_ext.decorate();
+
+        var rtcPublisher = new red5prosdk.RTCPublisher();
+        var rtcSubscriber = new red5prosdk.RTCSubscriber();
+
+        var autoscaleConfig = {
+          protocol: 'https',
+          host: 'streammanager.company.org',
+          streamName: 'mystream',
+          scope: 'live',
+          apiVersion: '3.0',
+          useProxy: true
+        };
+
+        var initConfig = {
+          protocol: 'wss',
+          host: 'streammanager.company.org',
+          port: 8083:,
+          app: 'live',
+          streamName: 'mystream',
+          iceServers: [{urls: 'stun:stun2.l.google.com:19302'}]
+        };
+
+        var publishAutoscaleConfig = Object.assign({}, autoscaleConfig, {
+          action: 'broadcast'
+        });
+        var subscribeAutoscaleConfig = Object.assign({}, autoscaleConfig, {
+          action: 'subscribe'
+        });
+
+        function subscribe () {
+          rtcSubscriber
+            .autoscale(subscribeAutoscaleConfig, initConfig)
+            .then(function () {
+              return rtcSubscriber.subscribe();
+            })
+            .catch(function (error) {
+              console.error('Could not play: ' + error);
+            });
+        }
+
+        // First connect Autoscale-d Publisher.
+        rtcPublisher
+          .autoscale(publishAutoscaleConfig, initConfig)
+          .then(function () {
+            // Once publishing, we will start the Autoscale-d Subscriber.
+            rtcPublisher.on(red5prosdk.PublisherEventTypes.PUBLISH_START, subscribe);
+            return rtcPublisher.publish();
+          })
+          .catch(function (error) {
+            console.error('Could not publish: ' + error)
+          });
+
+      }(window.red5prosdk, window.red5prosdk_ext_stream_manager));
+    &lt;/script>
+  &lt;/body>
+&lt;/html></code></pre><h1>Requirements</h1><p>The <strong>Red5 Pro HTML SDK</strong> is intended to communicate with a <a href="https://www.red5pro.com/">Red5 Pro Server</a>, which allows for broadcasting and consuming live streams utilizing <a href="https://developer.mozilla.org/en-US/docs/Web/Guide/API/WebRTC">WebRTC</a> and other protocols, including <a href="https://en.wikipedia.org/wiki/Real_Time_Messaging_Protocol">RTMP</a> and <a href="https://en.wikipedia.org/wiki/HTTP_Live_Streaming">HLS</a>.</p>
+<p>A <strong>Red5 Pro Server</strong> can be deployed to allow for autoscaling on cloud platforms (such as <a href="https://www.red5pro.com/docs/server/awsinstall/">Amazon Web Services</a>). In such a scenario, the <a href="https://www.red5pro.com/docs/autoscale/">Stream Manager API</a> is used by client-side webapps to access endpoints for Origins and Edges.</p>
+<p>With the <strong>Red5Pro Stream Manager Extension</strong> the communication with the <strong>Stream Manager</strong> is simplified and abstracted to allow for a familar client-side API which will handle accessing and configuring publishers and subscribers to stream on Origins and Edges, respectively.</p>
+<blockquote>
+<p><strong><a href="https://account.red5pro.com/login">Click here to start using the Red5 Pro Server today!</a></strong></p>
+</blockquote></article>
+    </section>
+
+
+
+
+
+
+</div>
+
+<footer>
+    <img class="logo" src="img/red5pro_logo.png" style="">
+</footer>
+<script>prettyPrint();</script>
+<script src="scripts/jquery.min.js"></script>
+<script src="scripts/tui-doc.js"></script>
+<script src="scripts/linenumber.js"></script>
+
+    <script>
+        var id = 'package:red5pro-extension-stream-manager_sub'.replace(/"/g, '_');
+        var selectedApi = document.getElementById(id); // do not use jquery selector
+        var $selectedApi = $(selectedApi);
+
+        $selectedApi.removeClass('hidden');
+        $selectedApi.parent().find('.glyphicon').removeClass('glyphicon-plus').addClass('glyphicon-minus');
+        showLnbApi();
+    </script>
+
+</body>
+</html>
