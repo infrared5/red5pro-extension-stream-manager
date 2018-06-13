@@ -35,7 +35,7 @@
         <ul></ul>
     </div>
     
-    <div class="lnb-api hidden"><h3>Modules</h3><ul><li><a href="module-red5prosdk_ext_stream_manager.html">red5prosdk_ext_stream_manager</a><button type="button" class="hidden toggle-subnav btn btn-link">  <span class="glyphicon glyphicon-plus"></span></button><div class="hidden" id="module:red5prosdk_ext_stream_manager_sub"><div class="member-type">Members</div><ul class="inner"><li><a href="module-red5prosdk_ext_stream_manager.html#.decorate">decorate</a></li><li><a href="module-red5prosdk_ext_stream_manager.html#.getLogger">getLogger</a></li><li><a href="module-red5prosdk_ext_stream_manager.html#.LOG_LEVELS">LOG_LEVELS</a></li><li><a href="module-red5prosdk_ext_stream_manager.html#.setLogLevel">setLogLevel</a></li></ul></div></li></ul></div><div class="lnb-api hidden"><h3>Global</h3><ul><li><a href="global.html#Autoscale">Autoscale</a></li><li><a href="global.html#autoscaleInit">autoscaleInit</a></li><li><a href="global.html#Decorate">Decorate</a></li><li><a href="global.html#request">request</a></li></ul></div>
+    <div class="lnb-api hidden"><h3>Modules</h3><ul><li><a href="module-red5prosdk_ext_stream_manager.html">red5prosdk_ext_stream_manager</a><button type="button" class="hidden toggle-subnav btn btn-link">  <span class="glyphicon glyphicon-plus"></span></button><div class="hidden" id="module:red5prosdk_ext_stream_manager_sub"><div class="member-type">Members</div><ul class="inner"><li><a href="module-red5prosdk_ext_stream_manager.html#.decorate">decorate</a></li><li><a href="module-red5prosdk_ext_stream_manager.html#.getLogger">getLogger</a></li><li><a href="module-red5prosdk_ext_stream_manager.html#.LOG_LEVELS">LOG_LEVELS</a></li><li><a href="module-red5prosdk_ext_stream_manager.html#.setLogLevel">setLogLevel</a></li></ul></div></li></ul></div><div class="lnb-api hidden"><h3>Global</h3><ul><li><a href="global.html#asyncWrap">asyncWrap</a></li><li><a href="global.html#autoscaleInit">autoscaleInit</a></li><li><a href="global.html#modifyInitConfigWithStreamManagerResponse">modifyInitConfigWithStreamManagerResponse</a></li><li><a href="global.html#req">req</a></li><li><a href="global.html#timeout">timeout</a></li></ul></div>
 </nav>
 <div id="resizer"></div>
 
@@ -69,143 +69,95 @@
     
 
     
-        <h3 class="subsection-title">Members</h3>
-
-        <dl>
-            
-
-<dt>
-<h4 class="name" id="Autoscale">
-    <span class="type-signature"><span class="icon green">constant</span> </span>Autoscale<span class="type-signature"></span>
-    
-</h4>
-
-
-</dt>
-<dd>
-    
-    <div class="description">
-        <p>Top-level decorate function.</p>
-    </div>
-    
-
-    <!--
-    
-    -->
-
-    
-
-
-<dl class="details">
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-    
-
-    
-</dd>
-
-        
-            
-
-<dt>
-<h4 class="name" id="Decorate">
-    <span class="type-signature"><span class="icon green">constant</span> </span>Decorate<span class="type-signature"></span>
-    
-</h4>
-
-
-</dt>
-<dd>
-    
-    <div class="description">
-        <p>Class decorator for Publisher and Subscriber types from the Red5 Pro HTML SDK.</p>
-    </div>
-    
-
-    <!--
-    
-    -->
-
-    
-
-
-<dl class="details">
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-    
-
-    
-</dd>
-
-        </dl>
-    
 
     
         <h3 class="subsection-title">Methods</h3>
 
         <dl>
+                
+
+<dt>
+    
+        <h4 class="name" id="asyncWrap">
+            
+                <span class="type-signature"></span>asyncWrap<span class="signature">()</span><span class="type-signature"></span>
+                
+            
+        </h4>
+
+        
+    
+</dt>
+<dd>
+
+    
+    <div class="description">
+        <p>Nicely wraps an async in a promise so we can use in-line without try...catch.</p>
+    </div>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+    
+
+</dd>
+
+            
                 
 
 <dt>
@@ -390,9 +342,209 @@
 
 <dt>
     
-        <h4 class="name" id="request">
+        <h4 class="name" id="modifyInitConfigWithStreamManagerResponse">
             
-                <span class="type-signature"><span class="icon green">async</span> </span>request<span class="signature">(config)</span><span class="type-signature"></span>
+                <span class="type-signature"></span>modifyInitConfigWithStreamManagerResponse<span class="signature">(initConfig, respnose, autoscaleConfig)</span><span class="type-signature"> &rarr; {Object}</span>
+                
+            
+        </h4>
+
+        
+    
+</dt>
+<dd>
+
+    
+    <div class="description">
+        <p>Modifies and returns new intialization configuration used for publisher or subscriber.
+This configuration can vary based on target tech and the <code>useProxy</code> attribute of the autoscale configuration.</p>
+    </div>
+    
+
+    
+
+    
+
+    
+
+    
+    <div class="container-params">
+        <h5>Parameters:</h5>
+        
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>initConfig</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Object</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>The initialization configuration to modify.</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>respnose</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Object</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>The response configuration from the Stream Manager.</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>autoscaleConfig</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Object</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>The original configuration used for accessing the Stream Manager API.</p></td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+    </div>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <div class="container-returns">
+        <h5>Returns:</h5>
+        
+                
+
+
+
+<span class="param-type">Object</span>
+
+
+
+
+
+
+
+
+            
+    </div>
+    
+
+    
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+    
+
+</dd>
+
+            
+                
+
+<dt>
+    
+        <h4 class="name" id="req">
+            
+                <span class="type-signature"><span class="icon green">async</span> </span>req<span class="signature">(config)</span><span class="type-signature"></span>
                 
             
         </h4>
@@ -533,6 +685,90 @@
    retryDelay: 1000,       // optional, default=1000
    useProxy: true          // optional, default=true. Enforces connection proxy for WebRTC clients
  }</code></pre>
+
+    
+
+</dd>
+
+            
+                
+
+<dt>
+    
+        <h4 class="name" id="timeout">
+            
+                <span class="type-signature"></span>timeout<span class="signature">()</span><span class="type-signature"></span>
+                
+            
+        </h4>
+
+        
+    
+</dt>
+<dd>
+
+    
+    <div class="description">
+        <p>Promisified setTimeout.</p>
+    </div>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dl>
+
 
     
 

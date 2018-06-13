@@ -8,7 +8,6 @@ const defaultConfig = {
   scope: 'live',          // optional, default=live
   streamName: undefined,  // required
   apiVersion: '3.0',      // required, default=3.0
-  region: undefined,      // optional
   accessToken: undefined, // optional
   retryLimit: 0,          // optional, default (no retry)
   retryDelay: 1000,       // optional, default=1000
@@ -25,14 +24,10 @@ const endpointFromConfiguration = (configuration) => {
     scope,
     streamName,
     apiVersion,
-    region,
     accessToken
   } = configuration
   const portURI = port ? ':' + port : ''
   let url = `${protocol}://${host}${portURI}/streammanager/api/${apiVersion}/event/${scope}/${streamName}?action=${action}`
-  if (region) {
-    url += `&region=${region}`
-  }
   if (accessToken) {
     url += `&accessToken=${accessToken}`
   }

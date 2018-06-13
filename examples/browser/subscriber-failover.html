@@ -14,6 +14,10 @@
               red5prosdk.setLogLevel('debug');
               sm_ext.setLogLevel('debug');
 
+              window.subscriberLog = function (message) {
+                console.log('[RTMPSubscriber] :: ' + message);
+              }
+
               var autoscaleConfig = {
                 protocol: 'https',
                 host: 'nafarat.red5.org',
@@ -90,9 +94,6 @@
                 });
               */
 
-              window.subscriberLog = function (message) {
-                console.log('[RTMPSubscriber] :: ' + message);
-              }
             })(window.red5prosdk, window.red5prosdk_ext_stream_manager);
           </script>
   </body>
