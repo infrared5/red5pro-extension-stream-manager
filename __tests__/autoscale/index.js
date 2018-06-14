@@ -86,6 +86,20 @@ describe('autoscaleInit:success', () => {
     await req.default({...autoscaleConfig})
     expect(environment.fetch).toHaveBeenCalledWith(endpoint)
   })
+
+  it('should contain query params for connection and accessToken', async () => {
+    const token = 'abc123'
+    const url = 'http://foobar?baz=quo'
+    const encodedURL = encodeURIComponent(url)
+    const endpoint = `https://sm.company.org/streammanager/api/3.0/event/live/mystream?action=broadcast&validation_url=${encodedURL}&accessToken=${token}`
+    await req.default({...autoscaleConfig,
+      connectionParams: {
+        validation_url: url
+      },
+      accessToken: token
+    })
+    expect(environment.fetch).toHaveBeenCalledWith(endpoint)
+  })
 })
 
 describe.skip('autoscaleInit:failure', () => {
