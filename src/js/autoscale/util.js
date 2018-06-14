@@ -1,7 +1,11 @@
 const isFailoverConfig = /(rtc|rtmp|hls)/
 const isRTC = /(wss|ws)/
-// const isHLS = /(https|http)/
+const isHLS = /(https|http)/
 // const isRTMP = /(rtmps|rtmp)/
+
+const stripForwardSlash = (str) => {
+  return str.charAt(0) === '/' ? str.substr(1, str.length-1) : str
+}
 
 const assignConnectionParams = (config, response, autoscaleConfig) => {
     let c
@@ -13,7 +17,7 @@ const assignConnectionParams = (config, response, autoscaleConfig) => {
     //  describing the endpoint (Origin/Edge) and requesting through the Stream Manager webapp.
     const connectionParams = {...config.connectionParams,
       host: response.serverAddress,
-      app: response.scope.charAt(0) === '/' ? response.scope.substr(1, response.scope.length-1) : response.scope
+      app: stripForwardSlash(response.scope)
     }
     c = {...config,
       protocol: config.protocol,
@@ -23,11 +27,22 @@ const assignConnectionParams = (config, response, autoscaleConfig) => {
       app: 'streammanager',
       connectionParams: connectionParams
     }
+  } else if (isHLS.test(config.protocol)) {
+    const connectionParams = {...config.connectionParams,
+      host: response.serverAddress,
+      app: stripForwardSlash(response.scope)
+    }
+    c = {...config,
+      host: response.serverAddress,
+      app: stripForwardSlash(response.scope),
+      streamName: response.streamName,
+      connectionParams: connectionParams
+    }
   } else {
     // If we don't need to proxy, then just inject the Stream Manager response attributes.
     c = {...config,
       host: response.serverAddress,
-      app: response.scope.charAt(0) === '/' ? response.scope.substr(1, response.scope.length-1) : response.scope,
+      app: stripForwardSlash(response.scope),
       streamName: response.name
     }
   }
