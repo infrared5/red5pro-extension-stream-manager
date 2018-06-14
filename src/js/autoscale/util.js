@@ -13,7 +13,7 @@ const assignConnectionParams = (config, response, autoscaleConfig) => {
     //  describing the endpoint (Origin/Edge) and requesting through the Stream Manager webapp.
     const connectionParams = {...config.connectionParams,
       host: response.serverAddress,
-      app: response.scope.substr(1, response.scope.length-1)
+      app: response.scope.charAt(0) === '/' ? response.scope.substr(1, response.scope.length-1) : response.scope
     }
     c = {...config,
       protocol: config.protocol,
@@ -27,7 +27,7 @@ const assignConnectionParams = (config, response, autoscaleConfig) => {
     // If we don't need to proxy, then just inject the Stream Manager response attributes.
     c = {...config,
       host: response.serverAddress,
-      app: response.scope.substr(1, response.scope.length-1),
+      app: response.scope.charAt(0) === '/' ? response.scope.substr(1, response.scope.length-1) : response.scope,
       streamName: response.name
     }
   }
@@ -72,7 +72,7 @@ const asyncWrap = (p) => {
     }).catch(e => {
       resolve({
         error: e.message,
-        message: e.response.errorMessage
+        message: e.response ? e.response.errorMessage : undefined
       })
     })
   })
