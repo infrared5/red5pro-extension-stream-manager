@@ -27,16 +27,22 @@ const assignConnectionParams = (config, response, autoscaleConfig) => {
       app: 'streammanager',
       connectionParams: connectionParams
     }
-  } else if (isHLS.test(config.protocol)) {
+  } else if (autoscaleConfig.useProxy && isHLS.test(config.protocol)) {
     const connectionParams = {...config.connectionParams,
       host: response.serverAddress,
       app: stripForwardSlash(response.scope)
     }
+    const socketParams = {...config.socketParams,
+      protocol: autoscaleConfig.protocol === 'http' ? 'ws' : 'wss',
+      host: autoscaleConfig.host,
+      app: 'streammanager'
+    }
     c = {...config,
       host: response.serverAddress,
       app: stripForwardSlash(response.scope),
-      streamName: response.streamName,
-      connectionParams: connectionParams
+      streamName: response.name,
+      connectionParams: connectionParams,
+      socketParams: socketParams
     }
   } else {
     // If we don't need to proxy, then just inject the Stream Manager response attributes.
