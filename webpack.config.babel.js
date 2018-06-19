@@ -9,8 +9,8 @@ const banner = `
   Url: ${pkg.homepage}
 `;
 
-const buildDir = path.join(process.cwd(), 'build', `red5pro-extension-stream-manager-${pkg.version}`, 'lib', 'red5pro')
-const distDir = path.join(process.cwd(), 'dist', `red5pro-extension-stream-manager-${pkg.version}`, 'lib', 'red5pro')
+const buildDir = path.join(process.cwd(), 'build', `red5pro-ext-stream-manager-${pkg.version}`, 'lib', 'red5pro')
+const distDir = path.join(process.cwd(), 'dist', `red5pro-ext-stream-manager-${pkg.version}`, 'lib', 'red5pro')
 const PROD = (process.env.NODE_ENV === 'production')
 const STAGING = (process.env.NODE_ENV === 'staging')
 
@@ -22,21 +22,26 @@ let plugins = [
   })
 ]
 
+/*
 if(PROD || STAGING) {
   plugins.push(new webpack.optimize.UglifyJsPlugin({
       minimize: true,
       debug: false
   }))
 }
+*/
 
 export default {
-  mode: process.env.NODE_ENV || 'development',
+  mode: process.env.NODE_ENV === 'production' || 'development',
   entry: [path.join(process.cwd(), 'src', 'js', 'index.js')],
+  optimization: {
+    minimize: PROD || STAGING
+  },
   output: {
     library: 'red5prosdk_ext_stream_manager',
     libraryTarget: 'umd',
     path: PROD ? distDir : buildDir,
-    filename: (PROD || STAGING) ? 'red5pro-extension-stream-manager.min.js' : 'red5pro-extension-stream-manager.js'
+    filename: (PROD || STAGING) ? 'red5pro-ext-stream-manager.min.js' : 'red5pro-ext-stream-manager.js'
   },
   devtool: (PROD || STAGING) ? '' : '#inline-source-map',
   module: {
@@ -44,9 +49,9 @@ export default {
       {
         test: /\.js$/,
         exclude: /node_modules/,
-        use: {
-          loader: 'babel-loader'
-        }
+        use: [
+          {loader: 'babel-loader'}
+        ]
       }
     ]
   },

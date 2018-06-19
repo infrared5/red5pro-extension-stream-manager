@@ -1,0 +1,19 @@
+<!doctype html>
+<html>
+  <head>
+  </head>
+  <body>
+          <div>
+              <p>Hello, World</p>
+          </div>
+          <script src="lib/red5pro/red5pro-sdk.js"></script>
+          <script src="lib/red5pro/red5pro-ext-stream-manager.js"></script>
+          <script>
+            (function (red5prosdk, sm_ext) {
+              red5prosdk.setLogLevel('debug');
+              sm_ext.setLogLevel('debug');
+              sm_ext.decorate();
+            })(window.red5prosdk, window.red5prosdk_ext_stream_manager);
+          </script>
+  </body>
+</html>
