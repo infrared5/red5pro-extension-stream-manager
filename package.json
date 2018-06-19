@@ -26,7 +26,7 @@
     ]
   },
   "devDependencies": {
-    "@studio/changes": "git+https://github.com/infrared5/studio-changes.git#ir5/ci",
+    "@studio/changes": "^1.5.0",
     "babel-core": "^6.26.3",
     "babel-eslint": "^8.2.3",
     "babel-jest": "^23.0.1",
