@@ -14,7 +14,28 @@ const defaultConfig = {
   useProxy: true          // optional, default=true. Enforces connection proxy for WebRTC clients
 }
 
-// Generates proper URL for request on Stream Manager.
+/**
+ * Encode the value of each key and return a new object.
+ *
+ * @param {Object} valueObject
+ *        The object whose values should be encoded.
+ * @return {Object}
+ *
+ * @private
+ */
+const encodeKeyValues = (valueObject) => {
+  let encoded = {}
+  Object.keys(valueObject).forEach((key, index) => { // eslint-disable-line no-unused-vars
+    encoded[key] = encodeURIComponent(valueObject[key])
+  })
+  return encoded
+}
+
+/**
+ * Generates proper URL for request on Stream Manager.
+ *
+ * @private
+ */
 const endpointFromConfiguration = (configuration) => {
   const {
     action,
@@ -24,10 +45,25 @@ const endpointFromConfiguration = (configuration) => {
     scope,
     streamName,
     apiVersion,
-    accessToken
+    accessToken,
+    connectionParams
   } = configuration
+  let params = {
+    action: action
+  }
   const portURI = port ? ':' + port : ''
-  let url = `${protocol}://${host}${portURI}/streammanager/api/${apiVersion}/event/${scope}/${streamName}?action=${action}`
+  let url = `${protocol}://${host}${portURI}/streammanager/api/${apiVersion}/event/${scope}/${streamName}`
+  if (connectionParams) {
+    const encodedParams = encodeKeyValues(connectionParams)
+    params = Object.assign({}, params, encodedParams)
+  }
+  let kv = []
+  Object.keys(params).forEach((key, index) => { // eslint-disable-line no-unused-vars
+    kv.push([key, params[key]].join('='))
+  })
+  if (kv.length > 0) {
+    url += '?' + (kv.join('&'))
+  }
   if (accessToken) {
     url += `&accessToken=${accessToken}`
   }

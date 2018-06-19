@@ -48,7 +48,7 @@ const autoscaleInit = async (proxy, autoscaleConfig, initConfig) => {
   let response
 
   try {
-    response = await execute(autoscaleConfig, retryCount, retryLimit, retryDelay)
+    response = await execute(autoscaleConfig, retryCount, retryLimit || 1, retryDelay || 0)
     const config = modifyInitConfigWithStreamManagerResponse(initConfig, response, autoscaleConfig)
     debug(NAME, `[init-config]:: ${JSON.stringify(config, null, 2)}`)
     return proxy.init(config)
