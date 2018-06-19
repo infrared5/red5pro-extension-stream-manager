@@ -32,7 +32,7 @@ if(PROD || STAGING) {
 */
 
 export default {
-  mode: process.env.NODE_ENV === 'production' || 'development',
+  mode: process.env.NODE_ENV === 'production' ? 'production' : 'development',
   entry: [path.join(process.cwd(), 'src', 'js', 'index.js')],
   optimization: {
     minimize: PROD || STAGING
