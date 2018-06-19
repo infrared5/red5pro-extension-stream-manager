@@ -60,6 +60,7 @@
     "postwebpack:build": "gulp move-build-to-examples",
     "postwebpack:build-min": "gulp move-build-to-examples",
     "prewebpack:dist": "NODE_ENV=production gulp bump-version",
+		"postwebpack:dist": "gulp move-files-to-dist",
     "lint": "eslint ./src --ext .js",
     "test": "jest",
     "test:watch": "jest --watch",
