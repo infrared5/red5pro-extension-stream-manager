@@ -189,7 +189,8 @@ With the Publisher and Subscriber references from the **Red5 Pro HTML SDK** deco
     host: 'streammanager.company.org',
     streamName: 'mystream',
     scope: 'live',
-    apiVersion: '2.0',
+    apiVersion: '3.0',
+    action: 'broadcast',
     useProxy: true
   };
   var initConfig = {
@@ -248,7 +249,8 @@ In the case in which you will not want to use `decorate` (described [above](#dec
     host: 'streammanager.company.org',
     streamName: 'mystream',
     scope: 'live',
-    apiVersion: '2.0',
+    apiVersion: '3.0',
+    action: 'broadcast',
     useProxy: true
   };
   var initConfig = {
