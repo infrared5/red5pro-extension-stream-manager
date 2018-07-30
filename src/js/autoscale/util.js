@@ -3,12 +3,18 @@ const isRTC = /(wss|ws)/
 const isHLS = /(https|http)/
 // const isRTMP = /(rtmps|rtmp)/
 
+const PROXY_SCOPE = 'streammanager'
+
 const stripForwardSlash = (str) => {
   return str.charAt(0) === '/' ? str.substr(1, str.length-1) : str
 }
 
 const assignConnectionParams = (config, response, autoscaleConfig) => {
-    let c
+  let c
+  const streamName = response.name
+  const address = response.serverAddress
+  const appContext = stripForwardSlash(response.scope)
+  const hasSecureDomain = typeof response.hostname !== 'undefined'
   // WebRTC publishers and subscriber and HLS subscribers most likely will require `useProxy`.
   // This is due to Origin and Edge IPs being returned from the Stream Manager API.
   // Only Fully Qualified Domain Names can have an associated cert and WebRTC requires SSL.
@@ -16,40 +22,49 @@ const assignConnectionParams = (config, response, autoscaleConfig) => {
     // The structure of a "proxied" configuration is to pass `connectionParams`
     //  describing the endpoint (Origin/Edge) and requesting through the Stream Manager webapp.
     const connectionParams = {...config.connectionParams,
-      host: response.serverAddress,
-      app: stripForwardSlash(response.scope)
+      host: address,
+      app: appContext
     }
     c = {...config,
       protocol: config.protocol,
       port: config.port,
-      streamName: response.name,
+      streamName: streamName,
       host: autoscaleConfig.host,
-      app: 'streammanager',
+      app: PROXY_SCOPE,
       connectionParams: connectionParams
     }
   } else if (autoscaleConfig.useProxy && isHLS.test(config.protocol)) {
     const connectionParams = {...config.connectionParams,
-      host: response.serverAddress,
-      app: stripForwardSlash(response.scope)
+      host: address,
+      app: appContext
     }
     const socketParams = {...config.socketParams,
       protocol: autoscaleConfig.protocol === 'http' ? 'ws' : 'wss',
       host: autoscaleConfig.host,
-      app: 'streammanager'
+      app: PROXY_SCOPE
     }
     c = {...config,
-      host: response.serverAddress,
-      app: stripForwardSlash(response.scope),
-      streamName: response.name,
+      host: address,
+      app: appContext,
+      streamName: streamName,
       connectionParams: connectionParams,
       socketParams: socketParams
     }
   } else {
     // If we don't need to proxy, then just inject the Stream Manager response attributes.
-    c = {...config,
-      host: response.serverAddress,
-      app: stripForwardSlash(response.scope),
-      streamName: response.name
+    if (!hasSecureDomain) {
+      c = {...config,
+        host: address,
+        app: appContext,
+        streamName: streamName
+      }
+    } else {
+      // If we have a secure domain, (`hostname` in response) we are secure.
+      c = {...config,
+        host: response.hostname,
+        app: appContext,
+        streamName: streamName
+      }
     }
   }
   return c
