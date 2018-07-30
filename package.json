@@ -1,6 +1,6 @@
 {
   "name": "red5pro-extension-stream-manager",
-  "version": "1.0.3",
+  "version": "1.1.0",
   "description": "Library extension for Stream Manager support",
   "main": "src/index.js",
   "repository": {
