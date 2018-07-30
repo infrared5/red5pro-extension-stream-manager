@@ -24,6 +24,12 @@ describe('modifyInitConfigWithStreamManagerResponse', () => {
     scope: '/live2',
     name: 'mystream1'
   }
+  const smResponseWithHostname = {
+    serverAddress: '127.0.0.0',
+    scope: '/live3',
+    name: 'mystream2',
+    hostname: 'myred5pro.deploy.net'
+  }
 
   beforeEach(() => {
   })
@@ -150,4 +156,36 @@ describe('modifyInitConfigWithStreamManagerResponse', () => {
     })
 
   })
+
+  it('should use `hostname` in response without useProxy', () => {
+    let aC = {...autoscaleConfig, useProxy: false}
+    let iC = {
+      rtc: {...initConfig, protocol: 'wss', port: 8083},
+      rtmp: {...initConfig, protocol: 'rtmp', port: 1935},
+      hls: {...initConfig, protocol: 'https', port: 443}
+    }
+    let rtcConfig = {...iC.rtc,
+      host: smResponseWithHostname.hostname,
+      streamName: smResponseWithHostname.name,
+      app: smResponseWithHostname.scope.substr(1, smResponseWithHostname.scope.length-1)
+    }
+    let rtmpConfig = {...iC.rtmp,
+      host: smResponseWithHostname.hostname,
+      streamName: smResponseWithHostname.name,
+      app: smResponseWithHostname.scope.substr(1, smResponseWithHostname.scope.length-1)
+    }
+    let hlsConfig = {...iC.hls,
+      host: smResponseWithHostname.hostname,
+      streamName: smResponseWithHostname.name,
+      app: smResponseWithHostname.scope.substr(1, smResponseWithHostname.scope.length-1)
+    }
+    const result = modifyInitConfigWithStreamManagerResponse(iC, smResponseWithHostname, aC)
+    expect(result).toEqual({...iC,
+      rtc: rtcConfig,
+      rtmp: rtmpConfig,
+      hls: hlsConfig
+    })
+
+  })
+
 })
