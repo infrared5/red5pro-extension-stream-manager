@@ -242,7 +242,6 @@ In the case in which you will not want to use `decorate` (described [above](#dec
 (function (red5prosdk, sm_extension) {
 
   sm_extension.setLogLevel('debug');
-  sm_extension.decorate();
 
   var autoscaleConfig = {
     protocol: 'https',
